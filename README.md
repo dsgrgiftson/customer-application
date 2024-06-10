@@ -52,18 +52,18 @@ The application is integrated with Swagger UI for testing the APIs and Postman c
 repository for testing.
 
 Proof of testing is included in the repository as screenshots too. Postman collection and screenshots are available
-under /customer-application/postman.
+under ```/customer-application/postman```
 
 There are multiple ways of testing this application,
 
-1. Using Postman
-    1. Import the Postman collection from the repository
-    2. Run the collection
-2. Using Swagger UI
-    1. Go to http://localhost:8080/swagger-ui.html
-    2. Test the APIs by selecting the API and clicking on "Try it out"
-3. Using Junit Tests
-   a. Run the tests using ```mvn test```
+#### 1. Using Postman
+    Import the Postman collection from the repository
+    Run the collection
+#### 2. Using Swagger UI
+    Go to http://localhost:8080/swagger-ui.html
+    Test the APIs by selecting the API and clicking on "Try it out"
+#### 3. Using Junit Tests
+Run the tests using ```mvn test```
 
 ## Endpoints
 
