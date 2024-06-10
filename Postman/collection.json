@@ -1,0 +1,238 @@
+{
+	"info": {
+		"_postman_id": "64ee3574-d99d-4606-a389-658cd24a59fc",
+		"name": "ABN",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6235675"
+	},
+	"item": [
+		{
+			"name": "login_default_user_success",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/logon?username=davidgi&password=dummypassword",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"logon"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "davidgi"
+						},
+						{
+							"key": "password",
+							"value": "dummypassword"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login_default_user_failure",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/logon?username=davidgi&password=wrongpassword",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"logon"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "davidgi"
+						},
+						{
+							"key": "password",
+							"value": "wrongpassword"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login_new_user_success",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/logon?username=daasda&password=Hbklo1QbhM9N56v",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"logon"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "daasda"
+						},
+						{
+							"key": "password",
+							"value": "Hbklo1QbhM9N56v"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login_new_user_failure",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/logon?username=daasda&password=wrongnewpassword",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"logon"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "daasda"
+						},
+						{
+							"key": "password",
+							"value": "wrongnewpassword"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "register_new_user_success",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\" : \"daasda\",\n    \"fullName\" : \"Giftson David\",\n    \"address\" : \"test\",\n    \"dateOfBirth\" : \"07-02-1993\",\n    \"documentNumber\" : \"DOC123123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "register_new_user_failure_duplicate_user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\" : \"daasda\",\n    \"fullName\" : \"Giftson David\",\n    \"address\" : \"test\",\n    \"dateOfBirth\" : \"07-02-1993\",\n    \"documentNumber\" : \"DOC123123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "register_new_user_failure_null_fields",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\" : \"daasda\",\n    \"fullName\" : \"Giftson David\",\n    \"address\" : \"test\",\n    \"dateOfBirth\" : \"07-02-1993\",\n    \"documentNumber\" : null\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "register_new_user_failure_empty_fields",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\" : \"\",\n    \"fullName\" : \"Giftson David\",\n    \"address\" : \"test\",\n    \"dateOfBirth\" : \"07-02-1993\",\n    \"documentNumber\" : \"DOC123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
