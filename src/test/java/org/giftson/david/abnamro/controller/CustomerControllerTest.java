@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -86,11 +87,11 @@ class CustomerControllerTest {
     void testLoginFailure() {
         CustomerLoginResponse response = new CustomerLoginResponse(USERNAME, false, "Invalid username or password");
 
-        when(customerService.login(anyString(), anyString())).thenReturn(ResponseEntity.badRequest().body(response));
+        when(customerService.login(anyString(), anyString())).thenReturn(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response));
 
         ResponseEntity<CustomerLoginResponse> result = customerController.login(USERNAME, PASSWORD);
 
-        assertEquals(400, result.getStatusCode().value());
+        assertEquals(401, result.getStatusCode().value());
         assertEquals("Invalid username or password", result.getBody().message());
 
         verify(customerService, times(1)).login(anyString(), anyString());

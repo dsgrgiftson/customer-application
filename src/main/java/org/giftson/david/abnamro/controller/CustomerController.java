@@ -43,7 +43,7 @@ public class CustomerController {
     @Operation(summary = "Log in a customer", description = "Logs in a customer into the system")
     @APIResponses({
             @APIResponse(responseCode = "200", description = "Successful, returns customer login response"),
-            @APIResponse(responseCode = "400", description = "Failure, failed to authenticate due to invalid credentials"),
+            @APIResponse(responseCode = "401", description = "Failure, failed to authenticate due to invalid credentials"),
             @APIResponse(responseCode = "500", description = "Internal server error due to unexpected condition")
     })
     public ResponseEntity<CustomerLoginResponse> login(@Parameter(description = "Username that was used during registration") @RequestParam String username,
