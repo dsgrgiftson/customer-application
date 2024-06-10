@@ -6,7 +6,10 @@ import org.giftson.david.abnamro.model.response.CustomerLoginResponse;
 import org.giftson.david.abnamro.model.response.CustomerRegistrationResponse;
 import org.giftson.david.abnamro.repository.CustomerDetailsRepository;
 import org.giftson.david.abnamro.entity.CustomerDetails;
+import static org.giftson.david.abnamro.util.TestUtils.CUSTOMER_DETAILS;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,16 +52,26 @@ class CustomerServiceTest {
         assertEquals(200, result.getStatusCode().value());
         assertEquals("Registration successful", result.getBody().message());
 
+        assertTrue(result.getBody().isRegistered());
+        assertEquals(CUSTOMER_DETAILS.getUsername(), result.getBody().username());
+        assertNotNull(result.getBody().password());
+        assertNotNull(result.getBody().ibanNumber());
+
         verify(customerDetailsRepository, times(1)).findByUsername(anyString());
         verify(customerDetailsRepository, times(1)).save(any(CustomerDetails.class));
     }
 
     @Test
-    void testRegisterFailure_ValidationFailed_NullValues() {
+    void testRegisterFailureValidationFailedNullValues() {
         ResponseEntity<CustomerRegistrationResponse> result = customerService.register(new CustomerRegistrationRequest(USERNAME, PASSWORD, null, null, null));
 
         assertEquals(500, result.getStatusCode().value());
         assertNotNull(result.getBody().message());
+
+        assertFalse(result.getBody().isRegistered());
+        assertEquals(CUSTOMER_DETAILS.getUsername(), result.getBody().username());
+        assertNull(result.getBody().password());
+        assertNull(result.getBody().ibanNumber());
 
         verify(customerDetailsRepository, times(0)).findByUsername(anyString());
         verify(customerDetailsRepository, times(0)).save(any(CustomerDetails.class));
@@ -66,24 +79,34 @@ class CustomerServiceTest {
 
     @ParameterizedTest
     @MethodSource("getValidationFailedRequestsAndResponses")
-    void testRegisterFailure_ValidationFailed_EmptyValues(CustomerRegistrationRequest customerRegistrationRequest, int expectedStatusCode, String expectedMessage) {
+    void testRegisterFailureValidationFailedEmptyValues(CustomerRegistrationRequest customerRegistrationRequest, int expectedStatusCode, String expectedMessage) {
         ResponseEntity<CustomerRegistrationResponse> result = customerService.register(customerRegistrationRequest);
 
         assertEquals(expectedStatusCode, result.getStatusCode().value());
         assertTrue(result.getBody().message().contains(expectedMessage));
+
+        assertFalse(result.getBody().isRegistered());
+        assertEquals(CUSTOMER_DETAILS.getUsername(), result.getBody().username());
+        assertNull(result.getBody().password());
+        assertNull(result.getBody().ibanNumber());
 
         verify(customerDetailsRepository, times(0)).findByUsername(anyString());
         verify(customerDetailsRepository, times(0)).save(any(CustomerDetails.class));
     }
 
     @Test
-    void testRegisterFailure_UserExists() {
-        when(customerDetailsRepository.findByUsername(anyString())).thenReturn(Optional.of(new CustomerDetails()));
+    void testRegisterFailureUserExists() {
+        when(customerDetailsRepository.findByUsername(anyString())).thenReturn(Optional.of(CUSTOMER_DETAILS));
 
         ResponseEntity<CustomerRegistrationResponse> result = customerService.register(REGISTRATION_REQUEST);
 
         assertEquals(400, result.getStatusCode().value());
         assertEquals("Username provided already exists", result.getBody().message());
+
+        assertFalse(result.getBody().isRegistered());
+        assertEquals(CUSTOMER_DETAILS.getUsername(), result.getBody().username());
+        assertNull(result.getBody().password());
+        assertNull(result.getBody().ibanNumber());
 
         verify(customerDetailsRepository, times(1)).findByUsername(anyString());
         verify(customerDetailsRepository, times(0)).save(any(CustomerDetails.class));
@@ -99,18 +122,26 @@ class CustomerServiceTest {
         assertEquals(500, result.getStatusCode().value());
         assertEquals("Test Exception", result.getBody().message());
 
+        assertFalse(result.getBody().isRegistered());
+        assertEquals(CUSTOMER_DETAILS.getUsername(), result.getBody().username());
+        assertNull(result.getBody().password());
+        assertNull(result.getBody().ibanNumber());
+
         verify(customerDetailsRepository, times(1)).findByUsername(anyString());
         verify(customerDetailsRepository, times(1)).save(any(CustomerDetails.class));
     }
 
     @Test
     void testLogin() {
-        when(customerDetailsRepository.findByUsernameAndPassword(anyString(), anyString())).thenReturn(Optional.of(new CustomerDetails()));
+        when(customerDetailsRepository.findByUsernameAndPassword(anyString(), anyString())).thenReturn(Optional.of(CUSTOMER_DETAILS));
 
         ResponseEntity<CustomerLoginResponse> result = customerService.login(USERNAME, PASSWORD);
 
         assertEquals(200, result.getStatusCode().value());
         assertEquals("Login successful", result.getBody().message());
+
+        assertEquals(CUSTOMER_DETAILS.getUsername(), result.getBody().username());
+        assertTrue(result.getBody().isLoggedIn());
 
         verify(customerDetailsRepository, times(1)).findByUsernameAndPassword(anyString(), anyString());
     }
@@ -124,7 +155,33 @@ class CustomerServiceTest {
         assertEquals(400, result.getStatusCode().value());
         assertEquals("Invalid username or password", result.getBody().message());
 
+        assertEquals(CUSTOMER_DETAILS.getUsername(), result.getBody().username());
+        assertFalse(result.getBody().isLoggedIn());
+
         verify(customerDetailsRepository, times(1)).findByUsernameAndPassword(anyString(), anyString());
+    }
+
+    @Test
+    void testEntities() {
+        CustomerDetails customerDetails = new CustomerDetails();
+        customerDetails.setCustomerId(1L);
+        customerDetails.setUsername(USERNAME);
+        customerDetails.setPassword(PASSWORD);
+        customerDetails.setFullName("Test User");
+        customerDetails.setAddress("Test House 1, 1234AB Amsterdam, Netherlands");
+        customerDetails.setDateOfBirth(new java.util.Date(1993, 1, 1));
+        customerDetails.setDocumentNumber("DOC001");
+        customerDetails.setIbanNumber("NL01ABNA0123456789");
+
+        assertNotNull(customerDetails);
+        assertNotNull(customerDetails.getCustomerId());
+        assertNotNull(customerDetails.getUsername());
+        assertNotNull(customerDetails.getPassword());
+        assertNotNull(customerDetails.getFullName());
+        assertNotNull(customerDetails.getAddress());
+        assertNotNull(customerDetails.getDateOfBirth());
+        assertNotNull(customerDetails.getDocumentNumber());
+        assertNotNull(customerDetails.getIbanNumber());
     }
 
     public static Stream<Arguments> getValidationFailedRequestsAndResponses() {
