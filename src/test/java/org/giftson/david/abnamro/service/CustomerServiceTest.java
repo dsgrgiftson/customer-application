@@ -152,7 +152,7 @@ class CustomerServiceTest {
 
         ResponseEntity<CustomerLoginResponse> result = customerService.login(USERNAME, PASSWORD);
 
-        assertEquals(400, result.getStatusCode().value());
+        assertEquals(401, result.getStatusCode().value());
         assertEquals("Invalid username or password", result.getBody().message());
 
         assertEquals(CUSTOMER_DETAILS.getUsername(), result.getBody().username());

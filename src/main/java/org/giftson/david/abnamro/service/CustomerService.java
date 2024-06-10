@@ -12,6 +12,7 @@ import org.giftson.david.abnamro.model.request.CustomerRegistrationRequest;
 import org.giftson.david.abnamro.model.response.CustomerLoginResponse;
 import org.giftson.david.abnamro.model.response.CustomerRegistrationResponse;
 import org.giftson.david.abnamro.repository.CustomerDetailsRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -104,7 +105,7 @@ public class CustomerService {
         Optional<CustomerDetails> customerDetail = customerDetailsRepository.findByUsernameAndPassword(username, password);
         if (customerDetail.isEmpty()) {
             log.error("Invalid username or password");
-            return ResponseEntity.badRequest()
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new CustomerLoginResponse(username, false, "Invalid username or password"));
         }
         log.info("Login successful");
