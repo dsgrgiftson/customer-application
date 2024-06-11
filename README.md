@@ -13,6 +13,7 @@ register, log in, and manage their customer details.
 - SQL
 - Spring Boot
 - Maven
+- Docker
 
 ## Unit Testing
 
